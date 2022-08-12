@@ -1,0 +1,8 @@
+.env
+
+# environments 
+env/
+
+
+# npm files
+node_modules/
