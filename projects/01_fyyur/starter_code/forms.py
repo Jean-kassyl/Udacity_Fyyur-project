@@ -1,7 +1,11 @@
 from datetime import datetime
+from xml.dom import ValidationErr
 from flask_wtf import Form
 from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField
-from wtforms.validators import DataRequired, AnyOf, URL
+from wtforms.validators import DataRequired, AnyOf, URL, Length
+import re
+
+
 
 class ShowForm(Form):
     artist_id = StringField(
@@ -193,8 +197,10 @@ class ArtistForm(Form):
     )
     phone = StringField(
         # TODO implement validation logic for phone 
-        'phone'
+        'phone', validators=[Length(min=12, max=12)]
     )
+
+
     image_link = StringField(
         'image_link'
     )

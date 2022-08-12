@@ -11,9 +11,30 @@
 				<div class="item">
 					<h5>{{ venue.name }}</h5>
 				</div>
-			</a>
+			</a>	
 		</li>
+		<button class="btn btn-danger btn-sm delete"  data-id="{{venue.id}}">Delete</button>
 		{% endfor %}
 	</ul>
 {% endfor %}
+
+{% block scripts %}
+<script>
+	const dlt = document.querySelectorAll('.delete');
+	dlt.forEach(btn => {
+		btn.onclick = function(e){
+			const id = e.target.dataset.id;
+			const xhttp = new XMLHttpRequest()
+			xhttp.open("DELETE", '/venues/'+id)
+			
+			xhttp.onreadystatechange = function(){
+				if(xhttp.readyState === 4 && xhttp.status === 200){
+					window.location.href = '/';
+				}
+			}
+			xhttp.send()
+		}
+	})
+</script>
+{% endblock %}
 {% endblock %}
