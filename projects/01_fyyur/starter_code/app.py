@@ -227,7 +227,11 @@ def create_venue_submission():
       error = True
     finally:
       db.session.close()
-      
+  
+  else:
+    for error in form.phone.errors:
+      flash(error)
+    return render_template('forms/new_venue.html', form=form)
 
   if error:
     flash('An error occurred. Venue ' + data.name + ' could not be listed.')
@@ -561,9 +565,14 @@ def create_artist_submission():
     finally:
       db.session.close()
 
-    if error:
-      flash('An error occurred. Artist ' + data.name + ' could not be listed.')
-    else:
+  else:
+    for error in form.phone.errors:
+      flash(error)
+    return render_template('forms/new_artist.html', form=form)
+
+  if error:
+    flash('An error occurred. Artist ' + data.name + ' could not be listed.')
+  else:
       flash('Artist ' + formData['name'] + ' was successfully listed!')
 
   # on successful db insert, flash success

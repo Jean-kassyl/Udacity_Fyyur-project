@@ -2,10 +2,33 @@ from datetime import datetime
 from xml.dom import ValidationErr
 from flask_wtf import Form
 from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField
-from wtforms.validators import DataRequired, AnyOf, URL, Length
-import re
+from wtforms.validators import DataRequired, AnyOf, URL, Length, Regexp
+from enum import Enum
+
+class Genres(Enum):
+    ALTERNATIVE = "alternative"
+    BLUES = 'Blues'
+    CLASSICAL = 'Classical'
+    COUNTRY = 'Country'
+    ELECTRONIC = 'Electronic'
+    FOLK = 'Folk'
+    FUNK =  'Funk'
+    HIP_HOP =  'Hip-Hop'
+    HEAVY_METAL = 'Heavy Metal'
+    INSTRUMENTAL = 'Instrumental'
+    JAZZ = 'Jazz'
+    MUSIC_THEATRE = 'Musical Theatre'
+    POP ='Pop'
+    PUNK = 'Punk'
+    RNB = 'R&B'
+    REGGAE = 'Reggae'
+    ROCK_N_ROLL = 'Rock n Roll'
+    SOUL =  'Soul'
+    OTHER = 'Other'
 
 
+
+            
 
 class ShowForm(Form):
     artist_id = StringField(
@@ -87,7 +110,7 @@ class VenueForm(Form):
         'address', validators=[DataRequired()]
     )
     phone = StringField(
-        'phone'
+        'phone', validators=[Length(min=12, max=12), Regexp("[0-9]+\-[0-9]+\-[0-9]+", message = 'provide a valid phone number')]
     )
     image_link = StringField(
         'image_link'
@@ -95,7 +118,9 @@ class VenueForm(Form):
     genres = SelectMultipleField(
         # TODO implement enum restriction
         'genres', validators=[DataRequired()],
-        choices=[
+        choices=[(genre.name, genre.value) for genre in Genres]
+    )
+    '''
             ('Alternative', 'Alternative'),
             ('Blues', 'Blues'),
             ('Classical', 'Classical'),
@@ -117,6 +142,7 @@ class VenueForm(Form):
             ('Other', 'Other'),
         ]
     )
+    '''
     facebook_link = StringField(
         'facebook_link', validators=[URL()]
     )
@@ -197,7 +223,7 @@ class ArtistForm(Form):
     )
     phone = StringField(
         # TODO implement validation logic for phone 
-        'phone', validators=[Length(min=12, max=12)]
+        'phone', validators=[Length(min=12, max=12), Regexp("[0-9]+\-[0-9]+\-[0-9]+", message = 'provide a valid phone number')]
     )
 
 
@@ -205,8 +231,12 @@ class ArtistForm(Form):
         'image_link'
     )
     genres = SelectMultipleField(
+        # TODO implement enum restriction
         'genres', validators=[DataRequired()],
-        choices=[
+        choices=[(genre.name, genre.value) for genre in Genres]
+    )
+
+    '''
             ('Alternative', 'Alternative'),
             ('Blues', 'Blues'),
             ('Classical', 'Classical'),
@@ -228,6 +258,7 @@ class ArtistForm(Form):
             ('Other', 'Other'),
         ]
      )
+    '''
     facebook_link = StringField(
         # TODO implement enum restriction
         'facebook_link', validators=[URL()]
