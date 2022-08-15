@@ -1,10 +1,8 @@
-from __main__ import app 
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
-migrate = Migrate(app, db)
+
 
 
 class Show(db.Model):

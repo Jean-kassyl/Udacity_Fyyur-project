@@ -12,9 +12,16 @@ from flask_migrate import Migrate
 import logging
 from logging import Formatter, FileHandler
 from flask_wtf import Form
+import os
+import sys
+pwd = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, pwd)
+
+
 from forms import *
 from sqlalchemy import func
-import sys
+
+from models import *
 
 #----------------------------------------------------------------------------#
 # App Config.
@@ -23,8 +30,10 @@ import sys
 app = Flask(__name__)
 moment = Moment(app)
 app.config.from_object('config')
+db.init_app(app)
+migrate = Migrate(app, db)
 
-from models import *
+
 
 
 # TODO: connect to a local postgresql database
@@ -377,7 +386,6 @@ def show_artist(artist_id):
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
   form = ArtistForm()
-  form = ArtistForm()
   current_artist = Artist.query.get(artist_id)
   
   artist={
@@ -399,13 +407,14 @@ def edit_artist(artist_id):
   form.name.data = current_artist.name
   form.city.data = current_artist.city
   form.state.data = current_artist.state
-  form.genres.data = current_artist.genres.join(',')
+  form.genres.data = current_artist.genres
   form.phone.data = current_artist.phone
   form.website_link.data = current_artist.website_link
   form.facebook_link.data = current_artist.facebook_link
   form.seeking_venue.data = current_artist.seeking_venue
   form.seeking_description.data = current_artist.seeking_description
   form.image_link.data = current_artist.image_link
+  
  
   return render_template('forms/edit_artist.html', form=form, artist=artist)
 
@@ -464,7 +473,7 @@ def edit_venue(venue_id):
   form.name.data = venue.name
   form.city.data = venue.city
   form.state.data = venue.state
-  form.genres.data = venue.genres.join(',')
+  form.genres.data = venue.genres
   form.address.data = venue.address
   form.phone.data = venue.phone
   form.website_link.data = venue.website_link
